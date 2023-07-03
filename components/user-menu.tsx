@@ -24,16 +24,20 @@ function getUserInitials(name: string) {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
+
+  console.log(user)
+
   return (
     <div className="flex items-center justify-between">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="pl-0">
             {user?.image ? (
-              <Image
+              <Image width="60" height="60"
+                loader={()=>user.image ? user.image : ''}
                 className="w-6 h-6 transition-opacity duration-300 rounded-full select-none ring-1 ring-zinc-100/10 hover:opacity-80"
                 src={user?.image ? `${user.image}&s=60` : ''}
-                alt={user.name ?? 'Avatar'}
+                alt=""
               />
             ) : (
               <div className="flex items-center justify-center text-xs font-medium uppercase rounded-full select-none h-7 w-7 shrink-0 bg-muted/50 text-muted-foreground">

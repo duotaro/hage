@@ -18,6 +18,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'
 import { LoginButton } from '@/components/login-button'
+import DropdownLang from "@/components/dropdown-lang";
 
 export async function Header() {
   const session = await auth()
@@ -36,20 +37,25 @@ export async function Header() {
             </SidebarFooter>
           </Sidebar>
         ) : (
-          <Link href="/" target="_blank" rel="nofollow">
-            <IconNextChat className="w-6 h-6 mr-2 dark:hidden" inverted />
-            <IconNextChat className="hidden w-6 h-6 mr-2 dark:block" />
-          </Link>
+          <></>
         )}
-        <div className="flex items-center">
-          <IconSeparator className="w-6 h-6 text-muted-foreground/50" />
-          {session?.user ? (
+        <Link href="/" target="_blank" rel="nofollow">
+          <h1>Hageまし</h1>
+        </Link>
+      </div>
+      <div className="flex items-right">
+        <div className="mr-3">
+         {session?.user ? (
             <UserMenu user={session.user} />
           ) : (
-            <Button variant="link" asChild className="-ml-2">
+            <Button variant="link" asChild className="-ml-2 ">
               <Link href="/sign-in?callbackUrl=/">Login</Link>
             </Button>
           )}
+        </div>
+        {/* 言語切り替え */}
+        <div className="">
+          <DropdownLang />
         </div>
       </div>
     </header>
