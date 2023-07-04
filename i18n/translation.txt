@@ -1,0 +1,7 @@
+自分用のメモ。privateのため閲覧できません。
+↓
+
+https://docs.google.com/spreadsheets/d/1Qj_bAP1rviLPvOGrLdpq9zu-uqwzfs07CpzkQEH_htg/edit#gid=0
+ここで翻訳作成。
+
+メニューの「JSON」から各言語のJSONファイルを作成して、置換するだけ。

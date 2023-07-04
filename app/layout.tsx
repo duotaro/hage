@@ -1,56 +1,59 @@
-import { Metadata } from 'next'
+import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
+import cx from "classnames";
+import { sfPro, inter } from "./fonts";
+import Nav from "@/components/layout/nav";
+import Footer from "@/components/layout/footer";
+import { Suspense } from "react";
+import { defaultLocale, languages } from '../i18n/config'
+import { CounterContextProvider } from "../context/app.context";
 
-import { Toaster } from 'react-hot-toast'
+export async function generateStaticParams() {
+  return languages.map((lang) => ({ lang }))
+}
 
-import '@/app/globals.css'
-import { fontMono, fontSans } from '@/lib/fonts'
-import { cn } from '@/lib/utils'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
-import { Providers } from '@/components/providers'
-import { Header } from '@/components/header'
-
-export const metadata: Metadata = {
-  title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+export const metadata = {
+  title: "Precedent - Building blocks for your Next.js project",
+  description:
+    "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
+  twitter: {
+    card: "summary_large_image",
+    title: "Precedent - Building blocks for your Next.js project",
+    description:
+      "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
+    creator: "@steventey",
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' }
-  ],
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png'
+  metadataBase: new URL("https://precedent.dev"),
+  themeColor: "#FFF",
+};
+
+export default async function RootLayout({
+  children,
+  params: {
+    lang
   }
-}
-
-interface RootLayoutProps {
-  children: React.ReactNode
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}: {
+  children: React.ReactNode;
+  params:{
+    lang:string
+  }
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          'font-sans antialiased',
-          fontSans.variable,
-          fontMono.variable
-        )}
-      >
-        <Toaster />
-        <Providers attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex flex-col min-h-screen">
-            {/* @ts-ignore */}
-            <Header />
-            <main className="flex flex-col flex-1 bg-muted/50">{children}</main>
-          </div>
-          <TailwindIndicator />
-        </Providers>
+    <html lang={lang}>
+      <body className={cx(sfPro.variable, inter.variable)} id="main-body">
+        <CounterContextProvider>
+          <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
+          <Suspense fallback="...">
+            {/* @ts-expect-error Server Component */}
+            <Nav/>
+          </Suspense>
+          <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
+            {children}
+          </main>
+          <Footer />
+          <Analytics />
+          </CounterContextProvider>
       </body>
     </html>
-  )
+  );
 }
