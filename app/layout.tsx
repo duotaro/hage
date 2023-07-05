@@ -1,58 +1,48 @@
-import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
-import cx from "classnames";
-import { sfPro, inter } from "./fonts";
-import Nav from "@/components/layout/nav";
-import Footer from "@/components/layout/footer";
+// These styles apply to every route in the application
+import "@/styles/globals.css";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
-import { defaultLocale, languages } from '../i18n/config'
-import { CounterContextProvider } from "../context/app.context";
+import { NextAuthProvider } from "./providers";
+import Nav from "@/components/layout/nav";
 
-export async function generateStaticParams() {
-  return languages.map((lang) => ({ lang }))
-}
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
 
-export const metadata = {
-  title: "Precedent - Building blocks for your Next.js project",
-  description:
-    "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
+const title = "Next.js Prisma Postgres Auth Starter";
+const description =
+  "This is a Next.js starter kit that uses Next-Auth for simple email + password login and a Postgres database to persist the data.";
+
+export const metadata: Metadata = {
+  title,
+  description,
   twitter: {
     card: "summary_large_image",
-    title: "Precedent - Building blocks for your Next.js project",
-    description:
-      "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
-    creator: "@steventey",
+    title,
+    description,
   },
-  metadataBase: new URL("https://precedent.dev"),
+  metadataBase: new URL("https://nextjs-postgres-auth.vercel.app"),
   themeColor: "#FFF",
 };
 
 export default async function RootLayout({
   children,
-  params: {
-    lang
-  }
 }: {
   children: React.ReactNode;
-  params:{
-    lang:string
-  }
 }) {
   return (
-    <html lang={lang}>
-      <body className={cx(sfPro.variable, inter.variable)} id="main-body">
-        <CounterContextProvider>
-          <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
-          <Suspense fallback="...">
-            {/* @ts-expect-error Server Component */}
-            <Nav/>
-          </Suspense>
-          <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
-            {children}
-          </main>
-          <Footer />
-          <Analytics />
-          </CounterContextProvider>
+    <html lang="en">
+      <body className={inter.variable}>
+        <Toaster />
+        <Suspense fallback="Loading...">
+          <AuthStatus />
+        </Suspense>
+        <Nav />
+        <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
   );

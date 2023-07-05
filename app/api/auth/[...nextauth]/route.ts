@@ -1,49 +1,33 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
-import GithubProvider from 'next-auth/providers/github';
-import GoogleProvider from "next-auth/providers/google";
-import InstagramProvider from "next-auth/providers/instagram";
-import LineProvider from "next-auth/providers/line";
-import TwitterProvider from "next-auth/providers/twitter";
-import FacebookProvider from "next-auth/providers/facebook";
-import DiscordProvider from "next-auth/providers/discord";
-
+import { compare } from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
-  adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+    CredentialsProvider({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials ?? {}
+        if (!email || !password) {
+          throw new Error("Missing username or password");
+        }
+        const user = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+        // if user doesn't exist or password doesn't match
+        if (!user || !(await compare(password, user.password))) {
+          throw new Error("Invalid username or password");
+        }
+        return user;
+      },
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string
-    }),
-    InstagramProvider({
-      clientId: process.env.INSTAGRAM_CLIENT_ID as string,
-      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
-    }),
-    LineProvider({
-      clientId: process.env.LINE_CLIENT_ID as string,
-      clientSecret: process.env.LINE_CLIENT_SECRET as string,
-    }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID as string,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
-    }),
-    DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID as string,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET as string
-    })
   ],
-  secret: process.env.NEXTAUTH_SECRET as string,
 };
 
 const handler = NextAuth(authOptions);
