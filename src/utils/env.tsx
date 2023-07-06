@@ -1,0 +1,30 @@
+import Utils from "./utils"
+/*******************
+ * 環境変数
+ */
+/**
+ * firebase
+ */
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+const FIREBASE_AUYH_DOMAIN = process.env.FIREBASE_AUYH_DOMAIN || process.env.NEXT_PUBLIC_FIREBASE_AUYH_DOMAIN
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+const FIREBASE_STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET || process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+const FIREBASE_MESSAGEING_SENDER_ID = process.env.FIREBASE_MESSAGEING_SENDER_ID || process.env.NEXT_PUBLIC_FIREBASE_MESSAGEING_SENDER_ID
+const FIREBASE_APP_ID = process.env.FIREBASE_APP_ID || process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+
+
+const ENV = {
+    FIREBASE_API_KEY: FIREBASE_API_KEY,
+    FIREBASE_AUYH_DOMAIN: FIREBASE_AUYH_DOMAIN,
+    FIREBASE_PROJECT_ID: FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET: FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGEING_SENDER_ID: FIREBASE_MESSAGEING_SENDER_ID,
+    FIREBASE_APP_ID: FIREBASE_APP_ID
+}
+
+// check
+if(!ENV.FIREBASE_API_KEY){
+    Utils.popup("FIREBASE_API_KEY is empty. Check to make sure that environment variables are set correctly in the .env.local file and in other predetermined places.");
+}
+
+export default ENV
