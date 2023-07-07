@@ -7,6 +7,7 @@ import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
 import { nFormatter } from "@/lib/utils";
 import { getLocales } from "../i18n";
+import ENV from "@/utils/env";
 
 export default async function LangHome({ params: { lang } }:{
   params:{
@@ -14,6 +15,7 @@ export default async function LangHome({ params: { lang } }:{
   }
 }) {
   let dict = await getLocales(lang)
+
   const { stargazers_count: stars } = await fetch(
     "https://api.github.com/repos/steven-tey/precedent",
     {
@@ -29,6 +31,22 @@ export default async function LangHome({ params: { lang } }:{
   )
     .then((res) => res.json())
     .catch((e) => console.log(e));
+  
+  // 自前api
+  const apiUrl = `https://pixabay.com/api/?key=${ENV.PIXABAY_API_KEY}`
+  //const apiUrl = `${ENV.API_BASE_URL}api/pixabay`
+  await fetch(apiUrl)
+    .then((res) => {
+      let item = res.json()
+      console.log(item)
+    })
+    .catch((e) => {
+      console.log("error")
+      console.log(e)
+    });
+
+
+
 
   return (
     <>
@@ -56,7 +74,7 @@ export default async function LangHome({ params: { lang } }:{
         >
           <Balancer>
             An opinionated collection of components, hooks, and utilities for
-            your Next.js project.
+            your Swift project. 
           </Balancer>
         </p>
         <div

@@ -7,6 +7,7 @@ import Footer from "@/components/layout/footer";
 import { Suspense } from "react";
 import { defaultLocale, languages } from '../i18n/config'
 import { CounterContextProvider } from "../context/app.context";
+import Providers from "./providers"
 
 export async function generateStaticParams() {
   return languages.map((lang) => ({ lang }))
@@ -36,6 +37,7 @@ export default async function RootLayout({
   return (
     <html >
       <body className={cx(sfPro.variable, inter.variable)} id="main-body">
+        <Providers>
         <CounterContextProvider>
           <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
           <Suspense fallback="...">
@@ -47,6 +49,7 @@ export default async function RootLayout({
           <Footer />
           <Analytics />
           </CounterContextProvider>
+          </Providers>
       </body>
     </html>
   );

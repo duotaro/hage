@@ -11,18 +11,23 @@ import DropdownLang from "./dropdown-lang";
 import { useParams } from "next/navigation";
 import { getLocales } from "@/app/i18n";
 import { defaultLocale, getDisplayLocale } from "i18n/config";
-
+import { useTheme  } from "next-themes"
 
 const darkModeClass = "dark"
 
 export default function NavBar() {
   const { state, dispatch } = useAppContext()
   const { SignInModal, setShowSignInModal } = useSignInModal();
-  const [isDark, setIsDark] = useState(false)
+
   const scrolled = useScroll(50);
   const param = useParams()
   const locale = param.lang ? param.lang : defaultLocale
   let displayLocale:string = getDisplayLocale(locale)
+	const { systemTheme, theme, setTheme } = useTheme()
+
+  const [isDark, setIsDark] = useState(theme === "dark")
+
+  //const currentTheme = theme === "system" ? systemTheme : theme
 
   const toggleDarkMode = () => {
     setIsDark(!isDark)
@@ -32,8 +37,10 @@ export default function NavBar() {
     }
     if(!isDark) {
       body.classList.add(darkModeClass);
+      setTheme("dark")
     } else {
       body.classList.remove(darkModeClass);
+      setTheme("light")
     }
   }
 
